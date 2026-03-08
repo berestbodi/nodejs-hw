@@ -1,9 +1,39 @@
 import createHttpError from 'http-errors';
-import Note from '../models/note.js';
+import { Note } from '../models/note.js';
 
 export const getAllNotes = async (req, res) => {
-  const notes = await Note.find();
-  res.status(200).json(notes);
+  const { page = 1, perPage = 10, tag, search } = req.query;
+
+  const pageNumber = parseInt(page);
+  const limit = parseInt(perPage);
+  const skip = (pageNumber - 1) * limit;
+
+  const filter = {};
+  if (tag) {
+    filter.tag = tag;
+  }
+  if (search) {
+    filter.$text = { $search: search };
+  }
+
+  try {
+    const [totalNotes, notes] = await Promise.all([
+      Note.countDocuments(filter),
+      Note.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+    ]);
+
+    const totalPages = Math.ceil(totalNotes / limit);
+
+    res.status(200).json({
+      page: pageNumber,
+      perPage: limit,
+      totalNotes,
+      totalPages,
+      notes,
+    });
+  } catch {
+    res.status(500).json({ message: 'Server error during pagination' });
+  }
 };
 
 export const getNoteById = async (req, res) => {
