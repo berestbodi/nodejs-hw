@@ -16,24 +16,24 @@ export const getAllNotes = async (req, res) => {
     filter.$text = { $search: search };
   }
 
-  try {
-    const [totalNotes, notes] = await Promise.all([
-      Note.countDocuments(filter),
-      Note.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
-    ]);
+  const [totalNotes, notes] = await Promise.all([
+    Note.countDocuments(filter),
+    Note.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+  ]);
 
-    const totalPages = Math.ceil(totalNotes / limit);
-
-    res.status(200).json({
-      page: pageNumber,
-      perPage: limit,
-      totalNotes,
-      totalPages,
-      notes,
-    });
-  } catch {
-    res.status(500).json({ message: 'Server error during pagination' });
+  if (!notes) {
+    throw createHttpError(404, 'Note not found');
   }
+
+  const totalPages = Math.ceil(totalNotes / limit);
+
+  res.status(200).json({
+    page: pageNumber,
+    perPage: limit,
+    totalNotes,
+    totalPages,
+    notes,
+  });
 };
 
 export const getNoteById = async (req, res) => {
