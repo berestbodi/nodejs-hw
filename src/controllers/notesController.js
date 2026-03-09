@@ -21,10 +21,6 @@ export const getAllNotes = async (req, res) => {
     Note.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
   ]);
 
-  if (!notes) {
-    throw createHttpError(404, 'Note not found');
-  }
-
   const totalPages = Math.ceil(totalNotes / limit);
 
   res.status(200).json({
