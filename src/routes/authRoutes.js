@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { celebrate, Segments } from 'celebrate';
+import { celebrate } from 'celebrate';
 import * as authControllers from '../controllers/authController.js';
 import {
   registerUserSchema,
@@ -10,15 +10,10 @@ const router = Router();
 
 router.post(
   '/register',
-  celebrate({ [Segments.BODY]: registerUserSchema }),
+  celebrate(registerUserSchema),
   authControllers.registerUser,
 );
-
-router.post(
-  '/login',
-  celebrate({ [Segments.BODY]: loginUserSchema }),
-  authControllers.loginUser,
-);
+router.post('/login', celebrate(loginUserSchema), authControllers.loginUser);
 
 router.post('/refresh', authControllers.refreshUserSession);
 
