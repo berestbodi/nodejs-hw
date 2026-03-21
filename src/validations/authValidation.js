@@ -25,3 +25,24 @@ export const loginUserSchema = {
     }),
   }),
 };
+
+export const requestResetEmailSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().email().required().messages({
+      'any.required': 'Email is required',
+      'string.email': 'Email must be a valid email address',
+    }),
+  }),
+};
+
+export const resetPasswordSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    password: Joi.string().min(8).required().messages({
+      'any.required': 'Password is required',
+      'string.min': 'Password must be at least 8 characters long',
+    }),
+    token: Joi.string().required().messages({
+      'any.required': 'Token is required',
+    }),
+  }),
+};

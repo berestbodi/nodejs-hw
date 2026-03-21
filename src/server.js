@@ -9,6 +9,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import notesRoutes from './routes/notesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRoutes);
 app.use('/notes', notesRoutes);
+app.use('/users', userRouter);
 
 app.use(errors());
 app.use(notFoundHandler);
