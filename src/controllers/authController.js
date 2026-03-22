@@ -131,11 +131,18 @@ export const requestResetEmail = async (req, res, next) => {
       resetLink: `${process.env.FRONTEND_DOMAIN}/reset-password?token=${resetToken}`,
     });
 
-    await sendEmail({
-      to: user.email,
-      subject: 'Reset your password',
-      html,
-    });
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: 'Reset your password',
+        html,
+      });
+    } catch {
+      throw createHttpError(
+        500,
+        'Failed to send the email, please try again later.',
+      );
+    }
 
     res.status(200).json({
       message: 'Password reset email sent successfully',

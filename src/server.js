@@ -24,8 +24,8 @@ app.use('/auth', authRoutes);
 app.use('/notes', notesRoutes);
 app.use('/users', userRouter);
 
-app.use(errors());
 app.use(notFoundHandler);
+app.use(errors());
 app.use(errorHandler);
 
 await connectMongoDB();

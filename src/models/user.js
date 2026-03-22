@@ -30,7 +30,7 @@ const userSchema = new Schema(
 );
 
 userSchema.pre('save', async function () {
-  if (this.isNew || this.isModified('email')) {
+  if (!this.username) {
     this.username = this.email;
   }
 });

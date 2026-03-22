@@ -12,7 +12,7 @@ export const sendEmail = async (options) => {
   });
 
   try {
-    await transporter.sendMail({
+    return await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: options.to,
       subject: options.subject,
